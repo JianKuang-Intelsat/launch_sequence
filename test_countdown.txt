@@ -1,3 +1,15 @@
-E main_engine_start 3
+E main_engine_ignition 3
 C final_check 10
-E engine_chill 16
+E final_director 20
+E water_deluge_activate 30
+E tanks_pressuring 40
+C mid_check 45
+E thrust_vector_actuator_test 50
+E telemetry_check 55
+E start_up 60
+E fts_armed 65
+E engine_chill 70
+E lox_loading 75
+E fuel_loading 80
+C initial_check 90
+E internal_power 100

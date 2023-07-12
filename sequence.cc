@@ -26,10 +26,9 @@ launch_funcs::Sequence::Sequence(int year, int month, int day, int hour, int min
 	auto future_time_point = std::chrono::system_clock::from_time_t(future_time_t);	// set clock
 	future_time_point += std::chrono::milliseconds(millisecond);		// adjust by milliseconds
 	target_launch = future_time_point;					// target launch time
-	check_events = {};			// the status of all past events
+	check_events = {{"weather", CHECK_GO}, {"range", CHECK_GO}};		// the status of weather, range and all events
 	current_event = lift_off;		// pointer, to the last event
-
-	check_status_display = {{CHECK_GO,"GO"}, {CHECK_NOGO, "NOGO"}};
+	check_status_display = {{NOT_RUN, "PENDING"}, {CHECK_GO,"GO"}, {CHECK_NOGO, "NOGO"}};
 }
 
 int launch_funcs::Sequence::add_event(Event* new_event) {
@@ -50,7 +49,7 @@ int launch_funcs::Sequence::start_countdown() {
 	seconds = std::chrono::duration_cast<std::chrono::seconds>(target_launch - now).count();
 	remaining = seconds - current_event -> t_minus;		// remaining seconds until the next scheduled event
 	if(remaining < 0){
-		cout << "Insufficient time remaining!" << endl;	// Please set a further target launch into the future
+		cout << "Insufficient time remaining! Please delay the launch..." << endl;	// Please set a further target launch into the future
 		return MALFUNCTION;
 	}
 	Event* pre_start = new Event("pre_start", seconds);
@@ -67,7 +66,7 @@ int launch_funcs::Sequence::start_countdown() {
 		if(current_event -> identifier == "final_check") {
 			current_event -> execute(check_events);  // run the final check in the main thread
 			for(const auto &pair : check_events) {
-				cout << "Process " << pair.first << " status " << check_status_display[pair.second] << endl;
+				cout << "Process " << pair.first << ", status: " << check_status_display[pair.second] << endl;
 			}
 			if(check_events[current_event -> identifier] != CHECK_GO) {
 				cout << "Launch Aborted!" << endl;
