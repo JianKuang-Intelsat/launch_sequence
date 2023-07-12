@@ -15,7 +15,7 @@ namespace launch_funcs {
 			chrono::system_clock::time_point target_check;
 			int adjustment;
 		
-			Checkpoint(string name, int t, int(*action)(map<string, char>& check_events), chrono::system_clock::time_point target_check);
+			Checkpoint(string name, int t, chrono::system_clock::time_point target_check);
 
 			int execute(map<string, char>& check_events) override;
 		

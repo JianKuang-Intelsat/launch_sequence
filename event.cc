@@ -2,18 +2,20 @@
 #include <functional>
 #include <string>
 #include <thread>
+#include <map>
 #include "funcs.h"
 #include "event.h"
 
 using namespace std::this_thread;
 // Function template for any function signature
 
-launch_funcs::Event::Event(string name, int t, int (*a)(map<string, char>& check_event)) {
+launch_funcs::Event::Event(string name, int t) {
+	std::map<std::string, int (*)(std::map<std::string, char>&)> func_map = FunctionMap::getInstance().func_map;
 	identifier = name;
 	t_minus = t;
-	action = a;
 	seconds_until_next = 0;
 	next_event = NULL;
+	action = func_map[identifier];
 }
 
 int launch_funcs::Event::execute(map<string, char>& check_events) {
@@ -21,9 +23,15 @@ int launch_funcs::Event::execute(map<string, char>& check_events) {
 }
 
 int launch_funcs::Event::count_until_next() {
+	int second, minute;
 	for(long int i = 0; i < seconds_until_next; i++ ) {
-		cout << "\r" << t_minus - i << " " << endl;
+		second = t_minus - i;
+		minute = second / 60;
+		second = second - 60 * minute;
+		cout << "\r" << "T-" << minute << ":" << second << " ";
+		cout.flush();
 		sleep_for(1s);
 	}
+	cout << endl;
 	return 0;
 }

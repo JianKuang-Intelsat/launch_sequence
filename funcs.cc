@@ -6,7 +6,7 @@
 using namespace std;
 using namespace launch_funcs;
 
-int launch_funcs::func_void(map<string, char>& check_events) {
+int launch_funcs::func_pre_start(map<string, char>& check_events) {
 	return 0;
 }
 
@@ -43,11 +43,6 @@ int launch_funcs::func_main_engine_start(map<string, char>& check_events) {
 	return STATUS_NOMINAL;
 }
 
-int launch_funcs::func_sound_suppression_start(map<string, char>& check_events) {
-	cout << "Sound Suppression Start!" << endl;
-        return STATUS_NOMINAL;
-}
-
 int launch_funcs::func_final_countdown(map<string, char>& check_events) {
 	cout << "Final countdown" << endl;
 	check_events["final_countdown"] = STATUS_NOMINAL;
@@ -74,7 +69,7 @@ int launch_funcs::func_telemetry_set_up(map<string, char>& check_events) {
         return STATUS_NOMINAL;
 }
 
-int launch_funcs::func_pressure_load(map<string, char>& check_events) {
+int launch_funcs::func_tanks_pressuring(map<string, char>& check_events) {
 	cout << "Fuel and LOX pressuring start" << endl;
         return STATUS_NOMINAL;
 }
@@ -91,17 +86,17 @@ int launch_funcs::func_engine_chill(map<string, char>& check_events) {
 	return STATUS_NOMINAL;
 }
 
-int launch_funcs::func_lox_complete(map<string, char>& check_events) {
-	cout << "LOX load complete" << endl;
+int launch_funcs::func_lox_loading(map<string, char>& check_events) {
+	cout << "LOX load start" << endl;
         return STATUS_NOMINAL;
 }
 
-int launch_funcs::func_fuel_complete(map<string, char>& check_events) {
-	cout << "Fuel load complete" << endl;
+int launch_funcs::func_fuel_loading(map<string, char>& check_events) {
+	cout << "Fuel load start" << endl;
         return STATUS_NOMINAL;
 }
 
 int launch_funcs::func_start_up(map<string, char>& check_events) {
-	cout << "Rocket Start up!" << endl;
+	cout << "Rocket Start up" << endl;
 	return STATUS_NOMINAL;
 }

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <ifstream>
 #include <functional>
 #include <ctime>
 #include <string>
@@ -22,13 +21,15 @@ launch_funcs::Sequence::Sequence(int year, int month, int day, int hour, int min
 	future_time_tm.tm_sec = second;        // seconds after the minute (0-60)
 	future_time_tm.tm_isdst = 0;            // time district is UTC
 
-	Event* lift_off = new Event("lift_off", 0, func_lift_off);		// last event
+	Event* lift_off = new Event("lift_off", 0);		// last event
 	std::time_t future_time_t = timegm(&future_time_tm);			// convert tm structure into time_t
 	auto future_time_point = std::chrono::system_clock::from_time_t(future_time_t);	// set clock
 	future_time_point += std::chrono::milliseconds(millisecond);		// adjust by milliseconds
 	target_launch = future_time_point;					// target launch time
 	check_events = {};			// the status of all past events
 	current_event = lift_off;		// pointer, to the last event
+
+	check_status_display = {{CHECK_GO,"GO"}, {CHECK_NOGO, "NOGO"}};
 }
 
 int launch_funcs::Sequence::add_event(Event* new_event) {
@@ -67,7 +68,7 @@ int launch_funcs::Sequence::start_countdown() {
 		cout << "Insufficient time remaining!" << endl;	// Please set a further target launch into the future
 		return MALFUNCTION;
 	}
-	Event* pre_start = new Event("pre_start", seconds, func_void);
+	Event* pre_start = new Event("pre_start", seconds);
 	pre_start -> seconds_until_next = remaining;
 	pre_start -> next_event = current_event;
 	current_event = pre_start;
@@ -80,7 +81,7 @@ int launch_funcs::Sequence::start_countdown() {
 									// async programming
 		if(current_event -> identifier == "final_check") {
 			for(const auto &pair : check_events) {
-				cout << "System " << pair.first << " status " << check_status_display[pair.second] << endl;
+				cout << "Process " << pair.first << " status " << check_status_display[pair.second] << endl;
 			}
 			if(check_events[current_event -> identifier] != CHECK_GO) {
 				cout << "Launch Aborted!" << endl;

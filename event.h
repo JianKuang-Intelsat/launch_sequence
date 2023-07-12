@@ -2,10 +2,10 @@
 #ifndef EVENT_H
 #define EVENT_H
 
+#include <string>
+
 using namespace std;
 // Function template for any function signature
-template <typename... Args>
-using FunctionPtr = int(*)(Args...);
 
 namespace launch_funcs {
 	
@@ -16,12 +16,12 @@ namespace launch_funcs {
 			string identifier;
 			int t_minus;
 			int seconds_until_next;
-			int (*action)(map<string, char>& check_event);
+			int (*action)(map<string, char>&);
 			Event* next_event;
 		
-			Event(string name, int t, int (*action)(map<string, char>& check_event));
+			Event(string name, int t);
 
-			virtual int execute(map<string, char>& check_events);
+			virtual int execute(map<string, char>&);
 		
 			virtual int count_until_next();
 	};

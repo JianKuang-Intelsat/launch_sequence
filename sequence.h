@@ -13,8 +13,10 @@ namespace launch_funcs {
 	
 		public:
 			std::chrono::system_clock::time_point target_launch;
-			map<string, char> check_events;
-			Event* current_event;
+			map<string, char> check_events;		// milestone events, example: engin_chill. GO/NOGO;
+			map<string, char> continuous_monitor;	// continuous monitoring states, example: weather, range. GO/NOGO;
+			map<char, string> check_status_display;
+			Event* current_event;		// pointer to the earliest event in sequence, initialized to "lift_off"
 	
 			Sequence(int year, int month, int day, int hour, int minute, int second, int millisecond);
 	
