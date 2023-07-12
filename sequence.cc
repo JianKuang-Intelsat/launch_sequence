@@ -43,21 +43,6 @@ int launch_funcs::Sequence::add_event(Event* new_event) {
 	return STATUS_NOMINAL;
 }
 
-/*
-int launch_funcs::Sequence::build_sequence(const string& path) {
-	ifstream file(path);
-	string line;
-	while (getline(file, line) {
-		if(line.size() == 0 or line.rfine("#", 0) == 0) continue;
-		stringstream to_parse{line};
-		char type;
-		string event_name;
-		int t_minus_seconds;
-		
-	}
-}
-*/
-
 int launch_funcs::Sequence::start_countdown() {
 	long int seconds, remaining;
 	int run_status;
@@ -75,11 +60,12 @@ int launch_funcs::Sequence::start_countdown() {
 	cout << "Count down initiated!" << endl;
 	while(current_event -> next_event != NULL) { 
 		std::thread t([this]() {
-			return current_event -> execute(check_events);	// run the action in a thread
+			return current_event -> execute(check_events);	// create another thread to run the action
 		});
 		t.detach();
 									// async programming
 		if(current_event -> identifier == "final_check") {
+			current_event -> execute(check_events);  // run the final check in the main thread
 			for(const auto &pair : check_events) {
 				cout << "Process " << pair.first << " status " << check_status_display[pair.second] << endl;
 			}

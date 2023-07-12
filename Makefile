@@ -2,7 +2,7 @@ CPP=clang++ -std=c++17
 
 # Build and run.
 launch: launch_sequence.exe
-	./launch_sequence.exe
+	./launch_sequence.exe test_countdown.txt
 
 # Clean outputs.
 clean:
