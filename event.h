@@ -14,6 +14,7 @@ namespace launch_funcs {
 		public:
 
 			string identifier;
+			string etype;
 			int t_minus;
 			int seconds_until_next;
 			int (*action)(map<string, char>&);

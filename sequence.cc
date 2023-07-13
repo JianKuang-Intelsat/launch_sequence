@@ -32,7 +32,7 @@ launch_funcs::Sequence::Sequence(int year, int month, int day, int hour, int min
 }
 
 int launch_funcs::Sequence::add_event(Event* new_event) {
-	long int seconds, remaining;
+	long int remaining;
 	auto now = std::chrono::system_clock::now();
 	remaining = new_event -> t_minus;
 	new_event -> next_event = current_event;
@@ -43,16 +43,16 @@ int launch_funcs::Sequence::add_event(Event* new_event) {
 }
 
 int launch_funcs::Sequence::start_countdown() {
-	long int seconds, remaining;
+	long int seconds_to_launch, remaining;
 	int run_status;
 	auto now = std::chrono::system_clock::now();
-	seconds = std::chrono::duration_cast<std::chrono::seconds>(target_launch - now).count();
-	remaining = seconds - current_event -> t_minus;		// remaining seconds until the next scheduled event
+	seconds_to_launch = std::chrono::duration_cast<std::chrono::seconds>(target_launch - now).count();
+	remaining = seconds_to_launch - current_event -> t_minus;		// remaining seconds until the next scheduled event
 	if(remaining < 0){
 		cout << "Insufficient time remaining! Please delay the launch..." << endl;	// Please set a further target launch into the future
 		return MALFUNCTION;
 	}
-	Event* pre_start = new Event("pre_start", seconds);
+	Event* pre_start = new Event("pre_start", seconds_to_launch);
 	pre_start -> seconds_until_next = remaining;
 	pre_start -> next_event = current_event;
 	current_event = pre_start;
@@ -63,10 +63,13 @@ int launch_funcs::Sequence::start_countdown() {
 		});
 		t.detach();
 									// async programming
-		if(current_event -> identifier == "final_check") {
-			current_event -> execute(check_events);  // run the final check in the main thread
+		if(current_event -> etype == "checkpoint") {
+			current_event -> execute(check_events);  // run checkpoints in the main thread
 			for(const auto &pair : check_events) {
-				cout << "Process " << pair.first << ", status: " << check_status_display[pair.second] << endl;
+				printf(CYAN "Process " RESET BOLD "%-30s" RESET ", status: " RESET "%s %10s" RESET "\n", 
+					pair.first.c_str(), 
+					pair.second == CHECK_GO ? GREEN : pair.second == CHECK_NOGO ? RED : YELLOW,
+					check_status_display[pair.second].c_str());
 			}
 			if(check_events[current_event -> identifier] != CHECK_GO) {
 				cout << "Launch Aborted!" << endl;

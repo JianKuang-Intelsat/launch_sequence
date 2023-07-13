@@ -12,6 +12,7 @@ using namespace std::this_thread;
 launch_funcs::Event::Event(string name, int t) {
 	std::map<std::string, int (*)(std::map<std::string, char>&)> func_map = FunctionMap::getInstance().func_map;
 	identifier = name;
+	etype = "ordinary";
 	t_minus = t;
 	seconds_until_next = 0;
 	next_event = NULL;
@@ -28,7 +29,8 @@ int launch_funcs::Event::count_until_next() {
 		second = t_minus - i;
 		minute = second / 60;
 		second = second - 60 * minute;
-		cout << "\r" << "T-" << minute << ":" << second << " ";
+		//cout << "\r" << "T-" << minute << ":" << second << " ";
+		printf(BOLD "\r T-%02d:%02d " RESET, minute, second);
 		cout.flush();
 		sleep_for(1s);
 	}

@@ -3,6 +3,15 @@
 #define MALFUNCTION -1
 #define CHECK_GO 0
 #define CHECK_NOGO -1
+#define RANDOM_FAIL 5
+
+#define BOLD    "\u001b[1m"
+#define GRAY    "\u001b[38;5;248m"
+#define CYAN    "\u001b[36m"
+#define RED     "\u001b[31m"
+#define GREEN   "\u001b[32m"
+#define YELLOW  "\u001b[33m"
+#define RESET   "\u001b[0m"
 
 #ifndef FUNCS_H
 #define FUNCS_H
